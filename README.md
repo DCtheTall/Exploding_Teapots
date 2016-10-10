@@ -7,9 +7,11 @@ The program also tessellates the low poly model to a smoother one.
 The user interface has two sliders which allow users to toggle
 number of teapots and how many times the tessellation algorithm is called.
 
-To run, clone the repository then in this directory run
-`python -m SimpleHTTPServer`
-from your command line. Open up localhost:8000 and the project should run.
+To run, clone the repository then in this directory run an HTTP server
+from your command line. Open up localhost on the correct port and the 
+project should run.
+
+ONLINE DEMO COMING SOON
 
 The tessellation algorithm still needs work. Right now it essentially just
 refines the resolution of the shading. Not satisfactory.
