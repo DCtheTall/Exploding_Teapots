@@ -4,6 +4,9 @@
 // Author: Dylan Cutler
 // --------------------
 
+// Main function that executes once the OBJ model
+// has been loaded
+//   @param teapot: Teapot model
 function main(teapot) {
   /// HTML Canvas contains the instance of WebGL
   var canvas = document.getElementById('webgl-canvas');
@@ -49,7 +52,9 @@ function main(teapot) {
   });
 }
 
-// Program start
+
+//**** PROGRAM START ****//
+
 var teapot;
 $.ajax({
   method: 'GET',
@@ -58,4 +63,4 @@ $.ajax({
     teapot = new OBJ.Mesh(res);
     main(teapot);
   }
-})
+});

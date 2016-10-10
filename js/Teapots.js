@@ -56,15 +56,36 @@ function initTeapots(teapot) {
 function getOffsets(vertices) {
   var offsets = [];
   for(var i = 0; i < vertices.length/18; i++ ) {
-    var polygon = [[],[],[],[],[],[]];
-    for(var j = 0; j < 18; j++) polygon[ Math.floor( j/3 ) ].push( vertices[18*i+j] );
-    var offset = polygon.reduce(function(prev, curr) {
-      prev[0] += curr[0] / 6;
-      prev[1] += curr[1] / 6;
-      prev[2] += curr[2] / 6;
-      return prev;
-    }, [0, 0, 0]);
-    for(var j = 0; j < 18; j++) offsets.push( offset[j % 3] );
+    var polyVerts = [[], [], [], [], [], []];
+    for(var j = 0; j < 18; j++)
+      polyVerts[ Math.floor(j/3) ].push( vertices[18*i+j] );
+    // Polygon case
+    if( polyVerts[0][0] === polyVerts[3][0] && polyVerts[2][0] === polyVerts[4][0] ) {
+      var polygon = [[],[],[],[],[],[]];
+      for(var j = 0; j < 18; j++) polygon[ Math.floor(j/3) ].push( vertices[18*i+j] );
+      var offset = polygon.reduce(function(prev, curr) {
+        for(k in curr) prev[k] += curr[k] / 6;
+        return prev;
+      }, [0, 0, 0]);
+      for(var j = 0; j < 18; j++) offsets.push( offset[j % 3] );
+    }
+    else { // Triangle case
+      var triangle = [[], [], []];
+      for(var j = 0; j < 9; j++) triangle[ Math.floor(j/3) ].push( vertices[18*i+j] );
+      var offset = triangle.reduce(function(prev, curr) {
+        for(k in curr) prev[k] += curr[k] / 3;
+        return prev;
+      }, [0, 0, 0]);
+      for(var j = 0; j < 9; j++) offsets.push( offset[j % 3] );
+      triange = [[], [], []];
+      for(var j = 0; j < 9; j++) triangle[ Math.floor(j/3) ].push( vertices[18*i+j+9] );
+      var offset = triangle.reduce(function(prev, curr) {
+        for(k in curr) prev[k] += curr[k] / 3;
+        return prev;
+      }, [0, 0, 0]);
+      for(var j = 0; j < 9; j++) offsets.push( offset[j % 3] );
+      triange = [[], [], []];
+    }
   }
   return offsets;
 }
@@ -89,6 +110,7 @@ function getRotationAxes(vertices, offsets) {
     var axis = [ vertices[18*i]-offsets[18*i],
                  vertices[18*i+1]-offsets[18*i+1],
                  vertices[18*i+2]-offsets[18*i+2] ];
+    // Polygon case
     for(var j = 0; j < 6; j++) axes.push.apply(axes, axis);
   }
   return axes;
