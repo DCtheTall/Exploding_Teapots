@@ -11,9 +11,9 @@ To run, clone the repository then in this directory run an HTTP server
 from your command line. Open up localhost on the correct port and the 
 project should run.
 
-ONLINE DEMO COMING SOON
+Live demo: http://dylancutler.us/teapot.html
 
-The tessellation algorithm still needs work. Right now it essentially just
-refines the resolution of the shading. Not satisfactory.
-
-Referring here on how to tessellate: http://courses.cms.caltech.edu/cs171/assignments/hw5/hw5-notes/notes-hw5.html#NotesSection2
+This application uses:
+- jQuery v2.1.4
+- cuon-matrix: Matrix library
+- web-gl-loader: OBJ parser
