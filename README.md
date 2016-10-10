@@ -13,7 +13,7 @@ project should run.
 
 Live demo: http://dylancutler.us/teapot.html
 
-This application uses:
+This application uses the following libraries:
 - jQuery v2.1.4
-- cuon-matrix: Matrix library
-- web-gl-loader: OBJ parser
+- cuon-matrix.js : Matrix library
+- web-gl-loader.js : OBJ parser
