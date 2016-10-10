@@ -8,16 +8,8 @@
 
 // This function loads the teapot model and returns
 // an object which stores model data for the teapot mesh
-function initTeapots() {
-  // Load teapot model using XML
-  // Teapot model from: http://goanna.cs.rmit.edu.au/~pknowles/models.html
-  var request = new XMLHttpRequest();
-  request.open("GET", "../teapot.obj", false);
-  request.send(null);
-
-  // Parsing obj using web-gl-loader.js
-  var response = request.responseText
-  ,   teapot = new OBJ.Mesh(response);
+//   @param teapot: Teapot model
+function initTeapots(teapot) {
 
   // TO DO: convert what's in OBJ into a format for drawing triangles
   var vertices = []
@@ -298,7 +290,7 @@ function tessellate(n) {
   }
 
   // Changing the vertices of the teapot to the tessellated vertices
-  this.vertices = vertices; console.log(normals.length)
+  this.vertices = vertices;
   this.normals = normals;
   this.offsets = getOffsets(vertices);
   this.randomSeeds = getRandomSeeds(vertices);

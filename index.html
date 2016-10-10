@@ -20,7 +20,7 @@
     <input id=num-tessellations-slider
            class=slider
            type=range
-           min=0 max=4
+           min=0 max=3
            value=0
            step=1 >
     </input>
@@ -148,14 +148,14 @@
           specular *= lightIntensities[i];
           specular /= pow(length(lightDir), 2.);
 
-          specColor += specular * vec3(1.);
+          specColor += specular * vec3(.7);
         }
 
         return specColor;
       }
 
       void main() {
-        lightPos[0] = vec3(10., 15., 30.);
+        lightPos[0] = vec3(18., 15., 30.);
         lightPos[1] = vec3(-15., 10., 30.);
         lightPos[2] = vec3(-20., 5., -2.);
 
@@ -163,7 +163,7 @@
         lightCol[1] = vec3(0.3, 0.7, 1.);
         lightCol[2] = vec3(0., 0.1, 0.3);
 
-        lightIntensities[0] = 900.;
+        lightIntensities[0] = 1200.;
         lightIntensities[1] = 400.;
         lightIntensities[2] = 600.;
 

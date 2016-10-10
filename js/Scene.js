@@ -9,7 +9,8 @@
 // returns an object with methods to manipulate the
 // WebGL scene
 //   @param canvas: HTMLCanvasElement the scene is rendered on
-function buildScene(canvas) {
+//   @param teapot: Teapot model
+function buildScene(canvas, teapot) {
 
   // Initializing WebGL
   var gl = canvas.getContext('webgl')
@@ -30,7 +31,7 @@ function buildScene(canvas) {
   var buffers = initBuffers(gl);
 
   // Initialize Teapot models (see Teapots.js)
-  var teapots = initTeapots();
+  var teapots = initTeapots(teapot);
 
  // Scene() returns an object which allows
  // main.js to access functions defined in this scope

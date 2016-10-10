@@ -4,7 +4,7 @@
 // Author: Dylan Cutler
 // --------------------
 
-function main() {
+function main(teapot) {
   /// HTML Canvas contains the instance of WebGL
   var canvas = document.getElementById('webgl-canvas');
   canvas.width = window.innerWidth > 800 ? 500 : 300;
@@ -12,7 +12,7 @@ function main() {
   $(canvas).css('left', (window.innerWidth/2-canvas.width/2)+'px');
 
   // Initializing WebGL scene, see Scene.js
-  var scene = buildScene(canvas);
+  var scene = buildScene(canvas, teapot);
   scene.render();
 
   // Adding dynamic style and event listeners to sliders
@@ -48,4 +48,14 @@ function main() {
     scene.teapots.exploding = true;
   });
 }
-main();
+
+// Program start
+var teapot;
+$.ajax({
+  method: 'GET',
+  url: '../teapot.obj',
+  success: function(res) {
+    teapot = new OBJ.Mesh(res);
+    main(teapot);
+  }
+})
