@@ -10,3 +10,8 @@ number of teapots and how many times the tessellation algorithm is called.
 To run, clone the repository then in this directory run
 `python -m SimpleHTTPServer`
 from your command line. Open up localhost:8000 and the project should run.
+
+The tessellation algorithm still needs work. Right now it essentially just
+refines the resolution of the shading. Not satisfactory.
+
+Referring here on how to tessellate: http://courses.cms.caltech.edu/cs171/assignments/hw5/hw5-notes/notes-hw5.html#NotesSection2
