@@ -60,7 +60,8 @@ function getOffsets(vertices) {
     for(var j = 0; j < 18; j++)
       polyVerts[ Math.floor(j/3) ].push( vertices[18*i+j] );
     // Polygon case
-    if( polyVerts[0][0] === polyVerts[3][0] && polyVerts[2][0] === polyVerts[4][0] ) {
+    if( polyVerts[0][0] === polyVerts[3][0] && polyVerts[2][0] === polyVerts[4][0]
+     || polyVerts[0][0] === polyVerts[5][0] && polyVerts[2][0] === polyVerts[3][0] ) {
       var polygon = [[],[],[],[],[],[]];
       for(var j = 0; j < 18; j++) polygon[ Math.floor(j/3) ].push( vertices[18*i+j] );
       var offset = polygon.reduce(function(prev, curr) {
@@ -77,7 +78,7 @@ function getOffsets(vertices) {
         return prev;
       }, [0, 0, 0]);
       for(var j = 0; j < 9; j++) offsets.push( offset[j % 3] );
-      triange = [[], [], []];
+      triangle = [[], [], []];
       for(var j = 0; j < 9; j++) triangle[ Math.floor(j/3) ].push( vertices[18*i+j+9] );
       var offset = triangle.reduce(function(prev, curr) {
         for(k in curr) prev[k] += curr[k] / 3;
@@ -110,7 +111,6 @@ function getRotationAxes(vertices, offsets) {
     var axis = [ vertices[18*i]-offsets[18*i],
                  vertices[18*i+1]-offsets[18*i+1],
                  vertices[18*i+2]-offsets[18*i+2] ];
-    // Polygon case
     for(var j = 0; j < 6; j++) axes.push.apply(axes, axis);
   }
   return axes;
@@ -167,13 +167,13 @@ function tessellate(n) {
   // This function takes polygon vertices or normals and
   // returns a linear combination of them for the center
   // point of a tessellated polygon
-  function linearCombo(points) {
+  function linearCombo(points, firstCase) {
     var output = [0, 0, 0];
     for(var i = 0; i < 3; i++) {
       output[i] += 3 * points[0][i] / 8;
       output[i] += points[1][i] / 8;
       output[i] += 3 * points[2][i] / 8;
-      output[i] += points[5][i] / 8;
+      output[i] += points[firstCase? 5:4][i] / 8;
     }
     return output;
   }
@@ -200,55 +200,114 @@ function tessellate(n) {
         newVertices.push.apply(newVertices, addVecsEqually(polyVerts[2], polyVerts[1]));
         newVertices.push.apply(newVertices, addVecsEqually(polyVerts[0], polyVerts[1]));
         newVertices.push.apply(newVertices, addVecsEqually(polyVerts[2], polyVerts[1]));
-        newVertices.push.apply(newVertices, linearCombo(polyVerts));
+        newVertices.push.apply(newVertices, linearCombo(polyVerts, true));
         newNormals.push.apply(newNormals, addVecsEqually(polyNorms[0], polyNorms[1]));
         newNormals.push.apply(newNormals, polyNorms[1]);
         newNormals.push.apply(newNormals, addVecsEqually(polyNorms[2], polyNorms[1]));
         newNormals.push.apply(newNormals, addVecsEqually(polyNorms[0], polyNorms[1]));
         newNormals.push.apply(newNormals, addVecsEqually(polyNorms[2], polyNorms[1]));
-        newNormals.push.apply(newNormals, linearCombo(polyNorms));
+        newNormals.push.apply(newNormals, linearCombo(polyVerts, true));
 
         // Second new polygon
         newVertices.push.apply(newVertices, polyVerts[0]);
         newVertices.push.apply(newVertices, addVecsEqually(polyVerts[0], polyVerts[1]));
-        newVertices.push.apply(newVertices, linearCombo(polyVerts));
+        newVertices.push.apply(newVertices, linearCombo(polyVerts, true));
         newVertices.push.apply(newVertices, polyVerts[0]);
-        newVertices.push.apply(newVertices, linearCombo(polyVerts));
+        newVertices.push.apply(newVertices, linearCombo(polyVerts, true));
         newVertices.push.apply(newVertices, addVecsEqually(polyVerts[3], polyVerts[5]));
         newNormals.push.apply(newNormals, polyNorms[0]);
         newNormals.push.apply(newNormals, addVecsEqually(polyNorms[0], polyNorms[1]));
-        newNormals.push.apply(newNormals, linearCombo(polyNorms));
+        newNormals.push.apply(newNormals, linearCombo(polyVerts, true));
         newNormals.push.apply(newNormals, polyNorms[0]);
-        newNormals.push.apply(newNormals, linearCombo(polyNorms));
+        newNormals.push.apply(newNormals, linearCombo(polyVerts, true));
         newNormals.push.apply(newNormals, addVecsEqually(polyNorms[3], polyNorms[5]));
 
         // Third new polygon
-        newVertices.push.apply(newVertices, linearCombo(polyVerts));
+        newVertices.push.apply(newVertices, linearCombo(polyVerts, true));
         newVertices.push.apply(newVertices, addVecsEqually(polyVerts[2], polyVerts[1]));
         newVertices.push.apply(newVertices, polyVerts[2]);
-        newVertices.push.apply(newVertices, linearCombo(polyVerts));
+        newVertices.push.apply(newVertices, linearCombo(polyVerts, true));
         newVertices.push.apply(newVertices, polyVerts[2]);
         newVertices.push.apply(newVertices, addVecsEqually(polyVerts[2], polyVerts[5]));
-        newNormals.push.apply(newNormals, linearCombo(polyNorms));
+        newNormals.push.apply(newNormals, linearCombo(polyVerts, true));
         newNormals.push.apply(newNormals, addVecsEqually(polyNorms[2], polyNorms[1]));
         newNormals.push.apply(newNormals, polyNorms[2]);
-        newNormals.push.apply(newNormals, linearCombo(polyNorms));
+        newNormals.push.apply(newNormals, linearCombo(polyVerts, true));
         newNormals.push.apply(newNormals, polyNorms[2]);
         newNormals.push.apply(newNormals, addVecsEqually(polyNorms[2], polyNorms[5]));
 
         // Fourth new polygon
         newVertices.push.apply(newVertices, addVecsEqually(polyVerts[3], polyVerts[5]));
-        newVertices.push.apply(newVertices, linearCombo(polyVerts));
+        newVertices.push.apply(newVertices, linearCombo(polyVerts, true));
         newVertices.push.apply(newVertices, addVecsEqually(polyVerts[2], polyVerts[5]));
         newVertices.push.apply(newVertices, addVecsEqually(polyVerts[3], polyVerts[5]));
         newVertices.push.apply(newVertices, addVecsEqually(polyVerts[2], polyVerts[5]));
         newVertices.push.apply(newVertices, polyVerts[5]);
         newNormals.push.apply(newNormals, addVecsEqually(polyNorms[3], polyNorms[5]));
-        newNormals.push.apply(newNormals, linearCombo(polyNorms));
+        newNormals.push.apply(newNormals, linearCombo(polyVerts, true));
         newNormals.push.apply(newNormals, addVecsEqually(polyNorms[2], polyNorms[5]));
         newNormals.push.apply(newNormals, addVecsEqually(polyNorms[3], polyNorms[5]));
         newNormals.push.apply(newNormals, addVecsEqually(polyNorms[2], polyNorms[5]));
         newNormals.push.apply(newNormals, polyNorms[5]);
+      }
+      else if( polyVerts[0][0] === polyVerts[5][0] && polyVerts[2][0] === polyVerts[3][0] ) {
+        // Other polygon case
+
+        // First polygon
+        newVertices.push.apply(newVertices, addVecsEqually(polyVerts[0], polyVerts[1]));
+        newVertices.push.apply(newVertices, polyVerts[1]);
+        newVertices.push.apply(newVertices, addVecsEqually(polyVerts[1], polyVerts[2]));
+        newVertices.push.apply(newVertices, addVecsEqually(polyVerts[1], polyVerts[2]));
+        newVertices.push.apply(newVertices, linearCombo(polyVerts, false));
+        newVertices.push.apply(newVertices, addVecsEqually(polyVerts[0], polyVerts[1]));
+        newNormals.push.apply(newNormals, addVecsEqually(polyNorms[0], polyNorms[1]));
+        newNormals.push.apply(newNormals, polyNorms[1]);
+        newNormals.push.apply(newNormals, addVecsEqually(polyNorms[1], polyNorms[2]));
+        newNormals.push.apply(newNormals, addVecsEqually(polyNorms[1], polyNorms[2]));
+        newNormals.push.apply(newNormals, linearCombo(polyNorms, false));
+        newNormals.push.apply(newNormals, addVecsEqually(polyNorms[0], polyNorms[1]));
+
+        // Second polygon
+        newVertices.push.apply(newVertices, linearCombo(polyVerts, false));
+        newVertices.push.apply(newVertices, addVecsEqually(polyVerts[1], polyVerts[2]));
+        newVertices.push.apply(newVertices, polyVerts[2]);
+        newVertices.push.apply(newVertices, polyVerts[2]);
+        newVertices.push.apply(newVertices, addVecsEqually(polyVerts[2], polyVerts[4]));
+        newVertices.push.apply(newVertices, linearCombo(polyVerts, false));
+        newNormals.push.apply(newNormals, linearCombo(polyNorms, false));
+        newNormals.push.apply(newNormals, addVecsEqually(polyNorms[1], polyNorms[2]));
+        newNormals.push.apply(newNormals, polyNorms[2]);
+        newNormals.push.apply(newNormals, polyNorms[2]);
+        newNormals.push.apply(newNormals, addVecsEqually(polyNorms[2], polyNorms[4]));
+        newNormals.push.apply(newNormals, linearCombo(polyNorms, false));
+
+        // Third polygon
+        newVertices.push.apply(newVertices, polyVerts[0]);
+        newVertices.push.apply(newVertices, addVecsEqually(polyVerts[0], polyVerts[1]));
+        newVertices.push.apply(newVertices, linearCombo(polyVerts, false));
+        newVertices.push.apply(newVertices, linearCombo(polyVerts, false));
+        newVertices.push.apply(newVertices, addVecsEqually(polyVerts[4], polyVerts[5]));
+        newVertices.push.apply(newVertices, polyVerts[0]);
+        newNormals.push.apply(newNormals, polyNorms[0]);
+        newNormals.push.apply(newNormals, addVecsEqually(polyNorms[0], polyNorms[1]));
+        newNormals.push.apply(newNormals, linearCombo(polyNorms, false));
+        newNormals.push.apply(newNormals, linearCombo(polyNorms, false));
+        newNormals.push.apply(newNormals, addVecsEqually(polyNorms[4], polyNorms[5]));
+        newNormals.push.apply(newNormals, polyNorms[0]);
+
+        // Fourth polygon
+        newVertices.push.apply(newVertices, addVecsEqually(polyVerts[4], polyVerts[5]));
+        newVertices.push.apply(newVertices, linearCombo(polyVerts, false));
+        newVertices.push.apply(newVertices, addVecsEqually(polyVerts[3], polyVerts[4]));
+        newVertices.push.apply(newVertices, addVecsEqually(polyVerts[3], polyVerts[4]));
+        newVertices.push.apply(newVertices, polyVerts[4]);
+        newVertices.push.apply(newVertices, addVecsEqually(polyVerts[4], polyVerts[5]));
+        newNormals.push.apply(newNormals, addVecsEqually(polyNorms[4], polyNorms[5]));
+        newNormals.push.apply(newNormals, linearCombo(polyNorms, false));
+        newNormals.push.apply(newNormals, addVecsEqually(polyNorms[3], polyNorms[4]));
+        newNormals.push.apply(newNormals, addVecsEqually(polyNorms[3], polyNorms[4]));
+        newNormals.push.apply(newNormals, polyNorms[4]);
+        newNormals.push.apply(newNormals, addVecsEqually(polyNorms[4], polyNorms[5]));
       }
       else { // Triangle case
         // Tessellating the first triangle
