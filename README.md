@@ -21,7 +21,7 @@ This application uses the following libraries:
 #### Side note:
 This project was built for a job interview challenge which
 explicitly disallowed ES modules, Webpack, Node, and JavaScript
-dialects.
+preprocessing dialects.
 
 Refactoring this project to use TypeScript/Babel to be in
 line with more modern JS dev practices is on my todos.
