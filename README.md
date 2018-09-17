@@ -11,8 +11,6 @@ To run, clone the repository then in this directory run an HTTP server
 from your command line. Open up localhost on the correct port and the 
 project should run.
 
-Live demo: http://dylancutler.us/teapot.html
-
 This application uses the following libraries:
 - jQuery v2.1.4
 - cuon-matrix.js : Matrix library
